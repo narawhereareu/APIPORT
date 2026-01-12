@@ -1,19 +1,16 @@
-// configs/firebaseAdmin.js
 import admin from "firebase-admin";
-import path from "path";
-import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
-// โหลด serviceAccountKey.json
-const serviceAccount = await import(path.join(__dirname, "serviceAccountKey.json"), {
-  assert: { type: "json" }
-});
+const serviceAccount = {
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+};
 
-// initialize Firebase Admin
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount.default)
+  credential: admin.credential.cert(serviceAccount),
 });
 
 export const db = admin.firestore();
