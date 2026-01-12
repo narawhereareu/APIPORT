@@ -1,13 +1,17 @@
+import 'dotenv/config'; // <- ensure this is first
 import express from "express";
 import cors from 'cors';
-import bodyParser from 'body-parser';
+// ...existing code...
+import "./configs/firebaseAdmin.js";
 import authRoutes from './routes/auth.js';
+// ...existing code...
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(bodyParser.json());
+// replace body-parser with built-in parser
+app.use(express.json());
 
 app.get('/', (req, res) => res.json({ status: 'ok' }));
 
