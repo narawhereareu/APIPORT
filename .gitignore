@@ -1,4 +1,2 @@
-# .gitignore
-configs/serviceAccountKey.json
-node_modules/
+/configs/serviceAccountKey.json
 .env
