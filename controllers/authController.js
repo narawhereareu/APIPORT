@@ -14,8 +14,15 @@ export const test = async (req, res) => {
 export const register = async (req, res) => {
   try {
     if (!db) {
-      console.error("Firebase Admin NOT initialized - missing env or init failed");
-      return res.status(500).json({ error: "Firebase not initialized" });
+      // Helpful diagnostics for deployed environments
+      const present = {
+        FIREBASE_SERVICE_ACCOUNT: !!process.env.FIREBASE_SERVICE_ACCOUNT,
+        FIREBASE_PROJECT_ID: !!process.env.FIREBASE_PROJECT_ID,
+        FIREBASE_CLIENT_EMAIL: !!process.env.FIREBASE_CLIENT_EMAIL,
+        FIREBASE_PRIVATE_KEY: !!process.env.FIREBASE_PRIVATE_KEY,
+      };
+      console.error("Firebase Admin NOT initialized - missing env or init failed", present);
+      return res.status(500).json({ error: "Firebase not initialized", details: present });
     }
 
     const { FNAME, LNAME, EMAIL, TEL, PASS } = req.body;
