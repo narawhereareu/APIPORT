@@ -44,21 +44,33 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
+    if (!db) {
+      return res.status(500).json({ error: "Firebase not initialized" });
+    }
+
     const { EMAIL, PASS } = req.body;
-    if (!EMAIL || !PASS) return res.status(400).json({ error: "Please fill all fields" });
+    if (!EMAIL || !PASS)
+      return res.status(400).json({ error: "Please fill all fields" });
 
-    const snapshot = await db.collection("users").where("EMAIL", "==", EMAIL).get();
-    if (snapshot.empty) return res.status(404).json({ error: "User not found" });
+    const snapshot = await db
+      .collection("users")
+      .where("EMAIL", "==", EMAIL)
+      .get();
 
-    const userDoc = snapshot.docs[0];
-    const userData = userDoc.data();
+    if (snapshot.empty)
+      return res.status(404).json({ error: "User not found" });
 
+    const userData = snapshot.docs[0].data();
     const match = await bcrypt.compare(PASS, userData.PASS);
-    if (!match) return res.status(401).json({ error: "Invalid password" });
+
+    if (!match)
+      return res.status(401).json({ error: "Invalid password" });
 
     res.json({ message: "Login successful", EMAIL: userData.EMAIL });
+
   } catch (err) {
-    console.error(err);
+    console.error("Login error:", err);
     res.status(500).json({ error: "Login failed" });
   }
 };
+
