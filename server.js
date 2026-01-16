@@ -4,6 +4,7 @@ import cors from 'cors';
 // ...existing code...
 import "./configs/firebaseAdmin.js";
 import authRoutes from './routes/auth.js';
+import messageRoutes from './routes/message.js';
 // ...existing code...
 
 const app = express();
@@ -16,5 +17,6 @@ app.use(express.json());
 app.get('/', (req, res) => res.json({ status: 'ok' }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/messages', messageRoutes);
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
